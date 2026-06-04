@@ -1,0 +1,96 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f4f6f8;
+  color: #222;
+}
+
+.app {
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 20px;
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 5px;
+}
+
+.subtitle {
+  text-align: center;
+  color: #666;
+  margin-bottom: 30px;
+}
+
+.course-form {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  display: grid;
+  gap: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.course-form input,
+.course-form textarea,
+.course-form select {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.course-form textarea {
+  min-height: 90px;
+  resize: vertical;
+}
+
+.course-form button {
+  padding: 12px;
+  background: #222;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 15px;
+}
+
+.course-form button:hover {
+  background: #444;
+}
+
+.course-list {
+  margin-top: 30px;
+}
+
+.course-card {
+  background: white;
+  padding: 18px;
+  margin-bottom: 15px;
+  border-radius: 10px;
+  border-left: 5px solid #222;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.course-card h3 {
+  margin-top: 0;
+}
+
+.delete-button {
+  margin-top: 10px;
+  padding: 8px 12px;
+  background: #b00020;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.delete-button:hover {
+  background: #d00030;
+}
