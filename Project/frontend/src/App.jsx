@@ -9,6 +9,7 @@ function App() {
   const [description, setDescription] = useState("");
   const [status, setStatus] = useState("Not Started");
   const [date, setDate] = useState("");
+  const [editingId, setEditingId] = useState(null);
 
   const fetchCourses = async () => {
     try {
@@ -24,10 +25,18 @@ function App() {
     fetchCourses();
   }, []);
 
+  const resetForm = () => {
+    setTitle("");
+    setDescription("");
+    setStatus("Not Started");
+    setDate("");
+    setEditingId(null);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const newCourse = {
+    const courseData = {
       title,
       description,
       status,
@@ -35,24 +44,49 @@ function App() {
     };
 
     try {
-      const response = await fetch(API_URL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(newCourse),
-      });
+      if (editingId) {
+        const response = await fetch(`${API_URL}/${editingId}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(courseData),
+        });
 
-      const savedCourse = await response.json();
-      setCourses([savedCourse, ...courses]);
+        const updatedCourse = await response.json();
 
-      setTitle("");
-      setDescription("");
-      setStatus("Not Started");
-      setDate("");
+        setCourses(
+          courses.map((course) =>
+            course._id === editingId ? updatedCourse : course
+          )
+        );
+
+        resetForm();
+      } else {
+        const response = await fetch(API_URL, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(courseData),
+        });
+
+        const savedCourse = await response.json();
+        setCourses([savedCourse, ...courses]);
+
+        resetForm();
+      }
     } catch (error) {
-      console.log("Failed to add course:", error);
+      console.log("Failed to save course:", error);
     }
+  };
+
+  const startEdit = (course) => {
+    setEditingId(course._id);
+    setTitle(course.title);
+    setDescription(course.description);
+    setStatus(course.status);
+    setDate(course.date);
   };
 
   const deleteCourse = async (id) => {
@@ -103,7 +137,15 @@ function App() {
           required
         />
 
-        <button type="submit">Add Course Item</button>
+        <button type="submit">
+          {editingId ? "Update Course Item" : "Add Course Item"}
+        </button>
+
+        {editingId && (
+          <button type="button" className="cancel-button" onClick={resetForm}>
+            Cancel Edit
+          </button>
+        )}
       </form>
 
       <div className="course-list">
@@ -123,12 +165,18 @@ function App() {
                 <strong>Date:</strong> {course.date}
               </p>
 
-              <button
-                className="delete-button"
-                onClick={() => deleteCourse(course._id)}
-              >
-                Delete
-              </button>
+              <div className="button-group">
+                <button className="edit-button" onClick={() => startEdit(course)}>
+                  Edit
+                </button>
+
+                <button
+                  className="delete-button"
+                  onClick={() => deleteCourse(course._id)}
+                >
+                  Delete
+                </button>
+              </div>
             </div>
           ))
         )}
